@@ -1,0 +1,49 @@
+---
+# Source: backend/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-service
+  labels:
+    app: react-ui
+    env: dev
+spec:
+  ports:
+  - name: http
+    port: 80
+    #nodePort: 30876
+    targetPort: 8080
+  selector:
+    app: react-ui
+  type: LoadBalancer
+---
+# Source: backend/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-ui-dep
+  labels:
+    app: react-ui
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-ui
+  template:
+    metadata:
+      labels:
+        app: react-ui
+        env: dev
+    spec:
+      containers:
+        - name: react-ui
+          image: eradarshchauhan/bookmanagementtool:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+              limits:
+                cpu: 0.2
+                memory: 500Mi
+              requests:
+                cpu: 0.2
+                memory: 500Mi
